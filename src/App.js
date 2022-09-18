@@ -27,7 +27,7 @@ export default class App extends React.Component {
           <div className="row">
             <div></div>
             <div className="title">Hộp quà may mắn</div>
-            <span>Kho đồ</span>
+            <span>túi đồ</span>
           </div>
         </div>
 
@@ -54,7 +54,7 @@ export default class App extends React.Component {
           <div className="popup" style={{ display: 'flex' }}>
             <div className="bg">
               <img src={this.img} />
-              <span className="gift">{this.state.gift}</span>
+              <span className="gift-text">{this.state.gift}</span>
             </div>
           </div>
         ) : null}
