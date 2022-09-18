@@ -2,6 +2,11 @@ import React from 'react';
 import './style.css';
 
 export default class App extends React.Component {
+  state = {
+    toggle: false,
+    gift: '',
+  };
+
   listGifts = [
     { des: 'Nạp thẻ Viettel 10K', value: 10 },
     { des: 'Chúc may mắn lần sau', value: 55 },
@@ -10,13 +15,25 @@ export default class App extends React.Component {
     { des: '+100 điểm thưởng', value: 25 },
   ];
 
+  img = 'https://cdn.dribbble.com/users/1162379/screenshots/6822916/gift.gif';
+
+  timePopup = null;
+  timeGift = null;
+
   render() {
     return (
       <div id="app">
         <div className="header">
-          <div></div>
-          <div>Hộp quà may mắn</div>
-          <span>Kho đồ</span>
+          <div className="row">
+            <div></div>
+            <div className="title">Hộp quà may mắn</div>
+            <span>Kho đồ</span>
+          </div>
+        </div>
+
+        <div className="row">
+          <span>Thể lệ</span>
+          <span></span>
         </div>
 
         <div className="list">
@@ -28,16 +45,32 @@ export default class App extends React.Component {
             >
               <img
                 className="img"
-                src="https://cdn.dribbble.com/users/1162379/screenshots/6822916/gift.gif"
+                src="https://raw.githubusercontent.com/khangtran/react-gift/main/public/gift.png"
               />
             </div>
           ))}
         </div>
+        {this.state.toggle ? (
+          <div className="popup" style={{ display: 'flex' }}>
+            <div className="bg">
+              <img src={this.img} />
+              <span className="gift">{this.state.gift}</span>
+            </div>
+          </div>
+        ) : null}
       </div>
     );
   }
 
+  togglePopup() {
+    this.setState({
+      toggle: !this.state.toggle,
+    });
+  }
+
   onClick(item) {
+    this.togglePopup();
+
     var rnd = this.getRandomInt(0, 100);
     var before = 0;
     var lst = this.listGifts.map((e, index) => {
@@ -48,6 +81,22 @@ export default class App extends React.Component {
     });
 
     console.log(lst);
+
+    this.timeGift = setTimeout(() => {
+      this.setState({
+        gift: rnd,
+      });
+    }, 1050);
+
+    this.timePopup = setTimeout(() => {
+      this.togglePopup();
+      this.setState({
+        gift: '',
+      });
+
+      this.timeGift && clearTimeout(this.timeGift);
+      this.timePopup && clearTimeout(this.timePopup);
+    }, 1400);
 
     before = 0;
     lst.forEach((e) => {
