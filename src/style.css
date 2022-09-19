@@ -25,7 +25,7 @@ body {
 }
 
 .header {
-  margin: 8px 0;
+  margin: 12px 0;
 }
 
 .title {
@@ -39,7 +39,7 @@ body {
 
   justify-content: space-between;
   align-items: center;
-  height: 100%;
+  /* height: 100%; */
 }
 
 .column {
@@ -75,12 +75,30 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-
+  top: 0;
+  left: 0;
+  right: 0;
   background: rgba(0, 0, 0, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
+}
+
+.popup > .modal {
+  background-color: white;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+}
+
+.message > .modal > .content > .row {
+  justify-content: space-evenly;
+}
+
+.modal > .header {
+  margin: 12px;
 }
 
 .popup > .bg {
@@ -123,11 +141,27 @@ body {
   right: 0;
   height: 60px;
   background-color: rgb(228, 228, 228);
-  font-size: 18px;
 }
 
 .navigation-bar > .content {
   margin: 0 12px;
+}
+
+.tabbarItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tabbarItem > img {
+  width: 32px;
+  height: 32px;
+  margin: 4px;
+}
+
+.tabbarItem > span {
+  font-size: 14px;
+  color: gray;
 }
 
 .button {
@@ -152,11 +186,12 @@ body {
 }
 
 .modal {
-  position: absolute;
+  /* position: absolute; */
   left: 0;
-  bottom: 0;
   right: 0;
-  height: 100%;
+
+  bottom: 0;
+  height: auto;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.863);
 }
@@ -172,8 +207,12 @@ body {
   background-color: rgb(238, 238, 238);
 }
 
+.mission > .content > .header {
+  margin: 0px 0 24px 0;
+}
+
 .popup > .background {
-  object-fit: contain;
+  object-fit: cover;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -208,4 +247,8 @@ body {
 
   height: 10px;
   background-color: rgba(0, 89, 255, 0.822);
+}
+
+.rule {
+  bottom: 20px;
 }

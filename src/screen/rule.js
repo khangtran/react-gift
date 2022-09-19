@@ -3,6 +3,10 @@ import '../style.css';
 import PopupModal from '../widgets/popupModal';
 
 export default class RuleScreen extends React.Component {
+  state = {
+    list: [],
+  };
+
   toggle() {
     this.modal.toggle();
   }
@@ -15,13 +19,9 @@ export default class RuleScreen extends React.Component {
         title="Thể lệ"
         content={
           <div>
-            <span>abc</span>
-            <span>abc</span>
-            <span>abc</span>
-            <span>abc</span>
-            <span>abc</span>
-            <span>abc</span>
-            <span>abc</span>
+            {this.state.list.map((item, index) => (
+              <div>{item}</div>
+            ))}
           </div>
         }
       />

@@ -7,17 +7,22 @@ export default class LoadingScreen extends React.Component {
     isToggle: false,
   };
 
-  toggle() {
-    this.setState({
-      isToggle: !this.state.isToggle,
-    });
+  timer = null;
 
-    if (this.state.isToggle) this.onStartPrgress();
+  toggle() {
+    this.setState(
+      {
+        isToggle: !this.state.isToggle,
+      },
+      () => {
+        if (this.state.isToggle) this.onStartPrgress();
+      }
+    );
   }
 
   onStartPrgress() {
     var value = 0.0;
-    isLoading = true;
+    console.log('check abc');
 
     this.timer = setInterval(() => {
       value += 0.01;
@@ -30,11 +35,11 @@ export default class LoadingScreen extends React.Component {
         this.setState({
           progress: 1,
         });
-        this.props.onCompeleted && this.props.onCompeleted();
+        this.props.onCompleted && this.props.onCompleted();
         return;
       }
-      // console.log('processing', value);
-    }, 50);
+      console.log('processing', value);
+    }, 45);
   }
 
   render() {

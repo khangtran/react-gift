@@ -3,6 +3,7 @@ import './style.css';
 import Mission from './screen/mission';
 import LoadingScreen from './screen/loading';
 import RuleScreen from './screen/rule';
+import PopupMessage from './widgets/dialogModal';
 
 export default class App extends React.Component {
   state = {
@@ -33,7 +34,12 @@ export default class App extends React.Component {
   componentDidMount() {
     const { mobile, platform } = navigator.userAgentData;
     console.log('check mobile: ', mobile, platform);
-    this.isMobile = mobile;
+
+    if (mobile) {
+      this.loading.toggle();
+    }
+    this.state.isMobile = mobile;
+    this.setState({});
   }
 
   render() {
@@ -43,7 +49,11 @@ export default class App extends React.Component {
         <LoadingScreen
           ref={(c) => (this.loading = c)}
           maxWidth={300}
-          onCompleted={() => this.setState({ isLoading: false })}
+          onCompleted={() => {
+            console.log('pass');
+            this.loading.toggle();
+            this.setState({ isLoading: false });
+          }}
         />
       </div>
     );
@@ -68,7 +78,6 @@ export default class App extends React.Component {
             style={{ width: '200px' }}
             onClick={() => {
               this.setState({ isMobile: true });
-              console.log('loading', this.loading);
               this.loading.toggle();
             }}
           >
@@ -81,54 +90,71 @@ export default class App extends React.Component {
 
   Main() {
     return (
-      <>
-        <div className="header">
-          <div className="row">
-            <div></div>
-            <div className="title">Hộp quà may mắn</div>
-            <div></div>
+      !this.state.isLoading && (
+        <>
+          <div className="header">
+            <div className="row">
+              <div></div>
+              <div className="title">Hộp quà may mắn</div>
+              <div></div>
+            </div>
           </div>
-        </div>
-        <div className="content">
-          <div className="wrap">
-            {[...Array(9).keys()].map((item, index) => (
-              <div
-                key={index}
-                className="item"
-                onClick={() => this.onClickGift(item)}
-              >
-                <img
-                  className="img"
-                  src="https://raw.githubusercontent.com/khangtran/react-gift/main/public/gift.png"
-                />
+          <div className="content">
+            <div className="wrap">
+              {[...Array(9).keys()].map((item, index) => (
+                <div
+                  key={index}
+                  className="item"
+                  onClick={() => this.onClickGift(item)}
+                >
+                  <img
+                    className="img"
+                    src="https://raw.githubusercontent.com/khangtran/react-gift/main/public/gift.png"
+                  />
+                </div>
+              ))}
+            </div>
+            {this.state.toggle ? (
+              <div className="popup" style={{ display: 'flex' }}>
+                <div className="bg">
+                  <img src={this.img} />
+                  <span className="gift-text">{this.state.gift}</span>
+                </div>
               </div>
-            ))}
+            ) : null}
           </div>
-          {this.state.toggle ? (
-            <div className="popup" style={{ display: 'flex' }}>
-              <div className="bg">
-                <img src={this.img} />
-                <span className="gift-text">{this.state.gift}</span>
+          <div className="float-ticket">
+            <span>Vé: {this.state.ticket} lượt</span>
+          </div>
+          <div className="navigation-bar">
+            <div className="content row">
+              <div className="tabbarItem" onClick={() => this.onTabBarGifts()}>
+                <img src="https://img.icons8.com/external-smashingstocks-circular-smashing-stocks/65/000000/external-Gifts-christmas-smashingstocks-circular-smashing-stocks.png" />
+                <span>Túi đồ</span>
+              </div>
+
+              <div
+                className="tabbarItem"
+                onClick={() => this.onTabBarMission()}
+              >
+                <img src="https://cdn-icons-png.flaticon.com/512/1409/1409014.png" />
+                <span>Nhiệm vụ</span>
+              </div>
+
+              <div className="tabbarItem" onClick={() => this.onTabbarRule()}>
+                <img src="https://img.icons8.com/external-flaticons-flat-flat-icons/64/000000/external-guidelines-vacation-planning-resort-flaticons-flat-flat-icons.png" />
+                <span>Thể lệ</span>
               </div>
             </div>
-          ) : null}
-        </div>
-        <div className="float-ticket">
-          <span>Vé: {this.state.ticket} lượt</span>
-        </div>
-        <div className="navigation-bar">
-          <div className="content row">
-            <span>Túi đồ</span>
-            <span onClick={() => this.onTabBarMission()}>Nhiệm vụ</span>
-            <span onClick={() => this.onTabbarRule()}>Thể lệ</span>
           </div>
-        </div>
-        <Mission
-          ref={(c) => (this.mission = c)}
-          onClick={(value) => this.onUpdateTicket(value)}
-        />
-        <RuleScreen ref={(c) => (this.rule = c)} />
-      </>
+          <Mission
+            ref={(c) => (this.mission = c)}
+            onClick={(value) => this.onUpdateTicket(value)}
+          />
+          <RuleScreen ref={(c) => (this.rule = c)} />
+          <PopupMessage ref={(c) => (this.dialog = c)} />
+        </>
+      )
     );
   }
 
@@ -138,9 +164,10 @@ export default class App extends React.Component {
     });
   }
 
+  onTabBarGifts() {}
+
   onTabBarMission() {
     this.mission.toggle();
-    console.log('open mission', this.mission);
   }
 
   onTabbarRule() {
@@ -155,8 +182,16 @@ export default class App extends React.Component {
 
   onClickGift(item) {
     if (this.state.ticket <= 0) {
-      alert(
-        'Bạn đã sử dụng hết vé mở hộp. Hãy hoàn thành nhiệm vụ để có thêm vé!'
+      this.dialog.showMessage(
+        'Bạn đã sử dụng hết vé mở hộp. Hãy hoàn thành nhiệm vụ để có thêm vé!',
+        [
+          {
+            text: 'Đồng ý',
+            onPress: () => {
+              this.dialog.pop();
+            },
+          },
+        ]
       );
       return;
     }
