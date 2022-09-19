@@ -1,7 +1,7 @@
 import React from 'react';
-import './style.css';
+import '../style.css';
 
-class PopupModal extends React.Component {
+export default class PopupModal extends React.Component {
   state = {
     isToggle: false,
   };
@@ -15,7 +15,7 @@ class PopupModal extends React.Component {
   render() {
     return (
       this.state.isToggle && (
-        <div className={'popup ' + this.props.className}>
+        <div className={'popup ' + this.props.className || ''}>
           <div className="header row">
             <span className="title">{this.props.title}</span>
             <div style={{ cursor: 'pointer' }} onClick={() => this.toggle()}>

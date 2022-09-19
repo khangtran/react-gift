@@ -1,11 +1,19 @@
 import React from 'react';
-import './style.css';
+import '../style.css';
 
 export default class LoadingScreen extends React.Component {
   state = {
     progress: 0,
-    isLoading: false,
+    isToggle: false,
   };
+
+  toggle() {
+    this.setState({
+      isToggle: !this.state.isToggle,
+    });
+
+    if (this.state.isToggle) this.onStartPrgress();
+  }
 
   onStartPrgress() {
     var value = 0.0;
@@ -21,8 +29,8 @@ export default class LoadingScreen extends React.Component {
         clearInterval(this.timer);
         this.setState({
           progress: 1,
-          isLoading: false,
         });
+        this.props.onCompeleted && this.props.onCompeleted();
         return;
       }
       // console.log('processing', value);
@@ -33,29 +41,37 @@ export default class LoadingScreen extends React.Component {
     let maxWidth = this.props.maxWidth || 300;
 
     return (
-      <div className="popup p-loading">
-        <div className="content loading" style={{ width: maxWidth }}>
-          <div className="row">
-            <div style={{ padding: '4px 2px' }}>
-              <span> Đang tải khởi tạo </span>
+      this.state.isToggle && (
+        <div className="popup p-loading">
+          <img
+            className="background"
+            src="https://img.wallpapersafari.com/phone/1080/1920/74/20/weJq6G.jpg"
+          />
+          <div className="content" style={{ width: maxWidth }}>
+            <div className="loading" style={{ width: maxWidth }}>
+              <div className="row">
+                <div style={{ padding: '4px 2px' }}>
+                  <span> Đang tải khởi tạo </span>
+                </div>
+                <span>{this.state.progress * 100}%</span>
+              </div>
+              <div className="progress">
+                <div
+                  className="background"
+                  style={{ width: maxWidth, height: '10px' }}
+                />
+                <div
+                  className="foreground"
+                  style={{
+                    maxWidth: maxWidth,
+                    width: (this.state.progress * maxWidth) / 1,
+                  }}
+                />
+              </div>
             </div>
-            <span>{this.state.progress * 100}%</span>
-          </div>
-          <div className="progress">
-            <div
-              className="background"
-              style={{ width: maxWidth, height: '10px' }}
-            />
-            <div
-              className="foreground"
-              style={{
-                maxWidth: maxWidth,
-                width: (this.state.progress * maxWidth) / 1,
-              }}
-            />
           </div>
         </div>
-      </div>
+      )
     );
   }
 }

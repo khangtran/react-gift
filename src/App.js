@@ -2,6 +2,7 @@ import React from 'react';
 import './style.css';
 import Mission from './screen/mission';
 import LoadingScreen from './screen/loading';
+import RuleScreen from './screen/rule';
 
 export default class App extends React.Component {
   state = {
@@ -38,13 +39,12 @@ export default class App extends React.Component {
   render() {
     return (
       <div id="app">
-        {!this.state.isMobile ? (
-          this.NotMobile()
-        ) : this.state.isLoading ? (
-          <LoadingScreen maxWidth={300} />
-        ) : (
-          this.Main()
-        )}
+        {!this.state.isMobile ? this.NotMobile() : this.Main()}
+        <LoadingScreen
+          ref={(c) => (this.loading = c)}
+          maxWidth={300}
+          onCompleted={() => this.setState({ isLoading: false })}
+        />
       </div>
     );
   }
@@ -68,7 +68,8 @@ export default class App extends React.Component {
             style={{ width: '200px' }}
             onClick={() => {
               this.setState({ isMobile: true });
-              this.onStartPrgress();
+              console.log('loading', this.loading);
+              this.loading.toggle();
             }}
           >
             <span>Tiếp tục</span>
@@ -119,13 +120,14 @@ export default class App extends React.Component {
           <div className="content row">
             <span>Túi đồ</span>
             <span onClick={() => this.onTabBarMission()}>Nhiệm vụ</span>
-            <span>Thể lệ</span>
+            <span onClick={() => this.onTabbarRule()}>Thể lệ</span>
           </div>
         </div>
         <Mission
           ref={(c) => (this.mission = c)}
           onClick={(value) => this.onUpdateTicket(value)}
         />
+        <RuleScreen ref={(c) => (this.rule = c)} />
       </>
     );
   }
@@ -139,6 +141,10 @@ export default class App extends React.Component {
   onTabBarMission() {
     this.mission.toggle();
     console.log('open mission', this.mission);
+  }
+
+  onTabbarRule() {
+    this.rule.toggle();
   }
 
   onUpdateTicket(value) {
