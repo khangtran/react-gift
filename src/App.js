@@ -31,9 +31,9 @@ export default class App extends React.Component {
   timer = null;
 
   componentDidMount() {
-    const isMobile = navigator.userAgentData.mobile;
-    console.log('check mobile: ', isMobile);
-    this.isMobile = isMobile;
+    const { mobile, platform } = navigator.userAgentData;
+    console.log('check mobile: ', mobile, platform);
+    this.isMobile = mobile;
   }
 
   render() {
