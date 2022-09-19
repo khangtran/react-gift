@@ -38,11 +38,11 @@ export default class Mission extends React.Component {
 
   render() {
     return (
-      <div className="root-mission">
+      <div id="root-mission">
         {this.state.toggle && (
-          <div className="mission">
+          <div className="mission modal">
             <div className="content">
-              <div className="row">
+              <div className="header row">
                 <span className="title">Nhiệm vụ</span>
                 <div
                   style={{ cursor: 'pointer' }}

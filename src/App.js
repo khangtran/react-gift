@@ -1,12 +1,16 @@
 import React from 'react';
 import './style.css';
-import Mission from './mission';
+import Mission from './screen/mission';
+import LoadingScreen from './screen/loading';
 
 export default class App extends React.Component {
   state = {
     toggle: false,
     gift: '',
     ticket: 5,
+    isMobile: false,
+    isLoading: true,
+    progress: 0,
   };
 
   listGifts = [
@@ -23,10 +27,60 @@ export default class App extends React.Component {
 
   timePopup = null;
   timeGift = null;
+  timer = null;
+
+  componentDidMount() {
+    const isMobile = navigator.userAgentData.mobile;
+    console.log('check mobile: ', isMobile);
+    this.isMobile = isMobile;
+  }
 
   render() {
     return (
       <div id="app">
+        {!this.state.isMobile ? (
+          this.NotMobile()
+        ) : this.state.isLoading ? (
+          <LoadingScreen maxWidth={300} />
+        ) : (
+          this.Main()
+        )}
+      </div>
+    );
+  }
+
+  NotMobile() {
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          textAlign: 'center',
+          top: '20%',
+          left: 0,
+          right: 0,
+          margin: '20%',
+        }}
+      >
+        <div className="column" style={{ alignItems: 'center' }}>
+          <span>Ứng dụng chỉ chạy trên nền tảng di động</span>
+          <div
+            className="button bt-normal"
+            style={{ width: '200px' }}
+            onClick={() => {
+              this.setState({ isMobile: true });
+              this.onStartPrgress();
+            }}
+          >
+            <span>Tiếp tục</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  Main() {
+    return (
+      <>
         <div className="header">
           <div className="row">
             <div></div>
@@ -58,11 +112,9 @@ export default class App extends React.Component {
             </div>
           ) : null}
         </div>
-
         <div className="float-ticket">
           <span>Vé: {this.state.ticket} lượt</span>
         </div>
-
         <div className="navigation-bar">
           <div className="content row">
             <span>Túi đồ</span>
@@ -70,12 +122,11 @@ export default class App extends React.Component {
             <span>Thể lệ</span>
           </div>
         </div>
-
         <Mission
           ref={(c) => (this.mission = c)}
           onClick={(value) => this.onUpdateTicket(value)}
         />
-      </div>
+      </>
     );
   }
 
